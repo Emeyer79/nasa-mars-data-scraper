@@ -1,10 +1,12 @@
+from bs4 import BeautifulSoup
+import requests
+from webdriver_manager.chrome import ChromeDriverManager
 from splinter import Browser
-from bs4 import BeautifulSoup as bs
+from selenium import webdriver
 import pandas as pd
-import time
 
 def init_browser():
-    executable_path = {'executable_path': 'C:\webdrivers\chromedriver'}
+    executable_path = {'executable_path': 'C:/webdrivers/chromedriver'}
     browser = Browser('chrome', **executable_path, headless=False)
     
 def scrape():
@@ -149,17 +151,18 @@ def scrape():
     
     #Store as a dictionary all
     
-    data = {
+    mars_data = {
         "news_title": first_title,
         "news_paragraph": first_p,
         "featured_image": featured_img,
         "weather": mars_weather,
         "mars_facts": html_table,
-        "hemispheres": hem_img_urls}
+        "hemispheres": hem_img_urls
+    }
     
     browser.quit()
-    
     return mars_data
+
 
 
     

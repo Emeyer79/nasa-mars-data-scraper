@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup as bs
 import requests
 from webdriver_manager.chrome import ChromeDriverManager
 from splinter import Browser
@@ -7,15 +7,13 @@ import pandas as pd
 
 def init_browser():
     executable_path = {'executable_path': 'C:/webdrivers/chromedriver'}
-    browser = Browser('chrome', **executable_path, headless=False)
+    return Browser('chrome', **executable_path, headless=False)
     
 def scrape():
     browser = init_browser()
     
     #Open NASA news site
     browser.visit('https://mars.nasa.gov/news/')
-    
-    time.sleep(1)
     
     #Use soup to scrape
     html = browser.html
@@ -40,9 +38,6 @@ def scrape():
     # Click through to find full image
     full_image_elem = browser.find_by_tag('button')[1]
     full_image_elem.click()
-
-    # Click again for full large image
-    time.sleep(2)
     
     # browser.click_link_by_text('more info')
     html = browser.html
@@ -52,20 +47,6 @@ def scrape():
     results = soup.find('img', class_='fancybox-image').get('src')
     featured_img = 'https://www.spaceimages-mars.com/' + results
     
-    #-----Mars Weather-------
-    
-    #Open browser to Mars TW
-    browser.visit('https://twitter.com/marswxreport?lang=en')
-    
-    # Parse the resulting html with soup
-    html = browser.html
-    tw_soup = bs(html, 'html.parser')
-
-    #Search for tweets
-    tweets = tw_soup.find_all(class_= "css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0")
-
-    #Grab first tweet
-    mars_weather = tweets[7].text
     
     #-----Mars Facts-----------
     
@@ -155,7 +136,6 @@ def scrape():
         "news_title": first_title,
         "news_paragraph": first_p,
         "featured_image": featured_img,
-        "weather": mars_weather,
         "mars_facts": html_table,
         "hemispheres": hem_img_urls
     }
